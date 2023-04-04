@@ -2,21 +2,22 @@
 
 /** @var yii\web\View $this */
 
-$this->title = 'SISKA';
+$this->title = 'My Yii Application';
 ?>
 <div class="site-index">
-    <div class="p-5 mb-4 bg-transparent rounded-3">
-        <div class="container-fluid py-5 text-center">
-            <h1 class="display-4">Congratulations!</h1>
-            <p class="fs-5 fw-light">You have successfully created your Yii-powered application.</p>
-            <p><a class="btn btn-lg btn-primary" href="http://www.yiiframework.com">Get started with Yii</a></p>
-        </div>
+
+    <div class="jumbotron text-center bg-transparent">
+        <h1 class="display-4">Congratulations!</h1>
+
+        <p class="lead">You have successfully created your Yii-powered application.</p>
+
+        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
     </div>
 
     <div class="body-content">
 
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <h2>Heading</h2>
 
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
@@ -26,7 +27,7 @@ $this->title = 'SISKA';
 
                 <p><a class="btn btn-outline-secondary" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-4">
                 <h2>Heading</h2>
 
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
@@ -36,7 +37,7 @@ $this->title = 'SISKA';
 
                 <p><a class="btn btn-outline-secondary" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-4">
                 <h2>Heading</h2>
 
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
