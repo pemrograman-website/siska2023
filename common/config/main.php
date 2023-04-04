@@ -10,4 +10,6 @@ return [
             'class' => \yii\caching\FileCache::class,
         ],
     ],
+    'language' => 'id-ID',
+    'timeZone' => 'Asia/Jakarta',
 ];
