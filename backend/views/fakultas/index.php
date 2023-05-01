@@ -13,6 +13,7 @@ use yii\widgets\Pjax;
 
 $this->title = 'Fakultas';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="fakultas-index">
 
@@ -35,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'kode',
             'nama',
             [
-                'class' => ActionColumn::className(),
+                'class' => ActionColumn::class,
                 'urlCreator' => function ($action, Fakultas $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                 },
