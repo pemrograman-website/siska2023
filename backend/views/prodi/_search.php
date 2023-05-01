@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use kartik\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var backend\models\ProdiSearch $model */

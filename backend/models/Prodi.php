@@ -30,11 +30,10 @@ class Prodi extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'fakultas_id'], 'required'],
-            [['id', 'fakultas_id'], 'integer'],
+            [['fakultas_id', 'kode', 'nama'], 'required'],
+            [['fakultas_id'], 'integer'],
             [['kode'], 'string', 'max' => 10],
             [['nama'], 'string', 'max' => 50],
-            [['id'], 'unique'],
             [['fakultas_id'], 'exist', 'skipOnError' => true, 'targetClass' => Fakultas::class, 'targetAttribute' => ['fakultas_id' => 'id']],
         ];
     }
@@ -47,7 +46,7 @@ class Prodi extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'kode' => 'Kode',
-            'nama' => 'Nama',
+            'nama' => 'Nama Prodi',
             'fakultas_id' => 'Fakultas ID',
         ];
     }
