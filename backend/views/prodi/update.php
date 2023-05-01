@@ -5,14 +5,14 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var backend\models\Prodi $model */
 
-$this->title = 'Update Prodi: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Prodis', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Ubah Prodi: ' . $model->nama;
+$this->params['breadcrumbs'][] = ['label' => 'Prodi', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->nama, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = 'Ubah';
 ?>
 <div class="prodi-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <!-- <h1><?= Html::encode($this->title) ?></h1> -->
 
     <?= $this->render('_form', [
         'model' => $model,
