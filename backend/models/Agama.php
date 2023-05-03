@@ -41,4 +41,12 @@ class Agama extends \yii\db\ActiveRecord
             'nama' => 'Nama',
         ];
     }
+
+    /**
+     * Mengembalikan daftar Agama (id dan nama)
+     */
+    public static function list()
+    {
+        return Agama::find()->all();
+    }
 }

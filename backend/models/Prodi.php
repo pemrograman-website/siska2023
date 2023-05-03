@@ -45,9 +45,9 @@ class Prodi extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'kode' => 'Kode',
-            'nama' => 'Nama Prodi',
-            'fakultas_id' => 'Fakultas ID',
+            'kode' => 'Kode Program Studi',
+            'nama' => 'Nama Program Studi',
+            'fakultas_id' => 'Fakultas',
         ];
     }
 
@@ -59,5 +59,13 @@ class Prodi extends \yii\db\ActiveRecord
     public function getFakultas()
     {
         return $this->hasOne(Fakultas::class, ['id' => 'fakultas_id']);
+    }
+
+    /**
+     * Mengembalikan daftar Fakultas (id dan nama)
+     */
+    public static function list()
+    {
+        return Prodi::find()->all();
     }
 }
