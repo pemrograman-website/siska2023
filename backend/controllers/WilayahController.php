@@ -2,10 +2,12 @@
 
 namespace backend\controllers;
 
+use Yii;
 use backend\models\Wilayah;
 use backend\models\WilayahSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 use yii\filters\VerbFilter;
 
 /**
@@ -130,5 +132,32 @@ class WilayahController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /* DEPENDENT DROPDOWN WILAYAH */
+    public function actionDepDrop()
+    {
+        // Kita pastikan response berupa JSON
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        // Buat array untuk menampung hasil combo box
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            // Ambil ID provinsi dari combo box sebelumnya
+            $id = end($_POST['depdrop_parents']);
+            $list = Wilayah::list($id);
+            $selected = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $wilayah) {
+                    $out[] = ['id' => $wilayah['kode'], 'name' => $wilayah['nama']];
+                    if ($i == 0) {
+                        $selected = $wilayah['kode'];
+                    }
+                }
+                return ['output' => $out, 'selected' => ''];
+            }
+        }
+        return ['output' => '', 'selected' => ''];
     }
 }
