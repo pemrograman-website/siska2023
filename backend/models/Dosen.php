@@ -4,6 +4,9 @@ namespace backend\models;
 
 use Yii;
 
+use yii\web\UploadedFile;
+use yii\web\ServerErrorHttpException;
+
 /**
  * This is the model class for table "dosen".
  *
@@ -43,6 +46,13 @@ use Yii;
  */
 class Dosen extends \yii\db\ActiveRecord
 {
+    // Jenis Kelamin
+    const LAKI_LAKI = 'L';
+    const PEREMPUAN = 'P';
+
+    // Variabel untuk menampung foto
+    public $fotoBerkas;
+
     /**
      * {@inheritdoc}
      */
@@ -60,9 +70,8 @@ class Dosen extends \yii\db\ActiveRecord
             [['tgl_lahir'], 'safe'],
             [
                 [
-                    'agama_id', 'homebase_id', 'prov_id', 'kab_id', 'kec_id',
-                    'kel_id', 'pendidikan_id', 'status_dosen_id', 'universitas_id',
-                    'user_id'
+                    'agama_id', 'homebase_id', 'pendidikan_id', 'status_dosen_id',
+                    'universitas_id', 'nama_lengkap', /*'user_id'*/
                 ], 'required'
             ],
             [
@@ -99,6 +108,9 @@ class Dosen extends \yii\db\ActiveRecord
             [['kab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Wilayah::class, 'targetAttribute' => ['kab_id' => 'kode']],
             [['kec_id'], 'exist', 'skipOnError' => true, 'targetClass' => Wilayah::class, 'targetAttribute' => ['kec_id' => 'kode']],
             [['kel_id'], 'exist', 'skipOnError' => true, 'targetClass' => Wilayah::class, 'targetAttribute' => ['kel_id' => 'kode']],
+
+            // Berikan nilai default null untuk atribut yang menjadi foreign key
+            [['prov_id', 'kab_id', 'kec_id', 'kel_id', 'user_id'], 'default', 'value' => null]
         ];
     }
 
@@ -109,28 +121,129 @@ class Dosen extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'nidn_nip' => 'Nidn Nip',
+            'nidn_nip' => 'NIDN / NIP',
             'nama_lengkap' => 'Nama Lengkap',
             'jenis_kelamin' => 'Jenis Kelamin',
-            'tmp_lahir' => 'Tmp Lahir',
-            'tgl_lahir' => 'Tgl Lahir',
-            'agama_id' => 'Agama ID',
-            'homebase_id' => 'Homebase ID',
-            'no_hp' => 'No Hp',
-            'alamat' => 'Alamat',
-            'prov_id' => 'Prov ID',
-            'kab_id' => 'Kab ID',
-            'kec_id' => 'Kec ID',
-            'kel_id' => 'Kel ID',
-            'pendidikan_id' => 'Pendidikan ID',
-            'status_dosen_id' => 'Status Dosen ID',
-            'universitas_id' => 'Universitas ID',
+            'tmp_lahir' => 'Tempat Lahir',
+            'tgl_lahir' => 'Tanggal Lahir',
+            'agama_id' => 'Agama',
+            'homebase_id' => 'Homebase',
+            'no_hp' => 'No HP',
+            'alamat' => 'Alamat Lengkap',
+            'prov_id' => 'Provinsi',
+            'kab_id' => 'Kabupaten',
+            'kec_id' => 'Kecamatan',
+            'kel_id' => 'Kelurahan',
+            'pendidikan_id' => 'Pendidikan Terakhir',
+            'status_dosen_id' => 'Status Dosen',
+            'universitas_id' => 'Universitas Asal',
             'fakultas_asal' => 'Fakultas Asal',
-            'prodi_asal' => 'Prodi Asal',
+            'prodi_asal' => 'Program Studi Asal',
             'foto_src' => 'Foto Src',
             'foto_web' => 'Foto Web',
             'user_id' => 'User ID',
         ];
+    }
+
+    /**
+     * Diturunkan dari ActiveRecord
+     * Kita lakukan override
+     */
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if (!empty($this->tgl_lahir)) {
+                $this->tgl_lahir = strtotime($this->tgl_lahir);
+                $this->tgl_lahir = date('Y-m-d', $this->tgl_lahir);
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    /*
+    * Method untuk validasi data secara manual
+    *
+    */
+    public function validasiData()
+    {
+        // Jika validasi gagal, hentikan beritahu gagal validasinya
+        if (!$this->validate()) {
+            return false;
+        }
+
+        // Jika validasi berhasil, kirim true
+        return true;
+    }
+
+    /**
+     * Method untuk upload foto
+     */
+
+    /**
+     * Mengambil foto dengan alamat path yang komplit 
+     * @return string
+     */
+    public function getFotoWeb()
+    {
+        return !empty($this->foto_web) ? Yii::$app->params['fotoPath'] . '/' . $this->foto_web : null;
+    }
+
+    /**
+     * Mengambil URL foto untuk menampilkan foto di web
+     * params['fotoUrl'] diset di MahasiswaController
+     * @return string
+     */
+    public function getFotoUrl()
+    {
+        return !empty($this->foto_web) ? Yii::$app->params['fotoUrl'] . '/' . $this->foto_web : null;
+    }
+
+    /**
+     * Memproses unggah berkas
+     *
+     * @return mixed the uploaded image instance
+     */
+    public function uploadFoto()
+    {
+        // get the uploaded file instance. for multiple file uploads
+        // the following data will return an array (you may need to use
+        // getInstances method)
+        $fotoInstance = UploadedFile::getInstance($this, 'fotoBerkas');
+
+        // if no image was uploaded abort the upload
+        if (empty($fotoInstance)) {
+            return false;
+        } else {
+            if (empty($this->foto_web)) {
+                // do nothing, krn sebelumnya tidak ada berkas
+            } else {
+                // hapus berkas lama dan ganti dengan berkas baru
+                $file = $this->getFotoWeb();
+
+                // check if file exists on server
+                if (empty($file) || !file_exists($file)) {
+                    throw new ServerErrorHttpException('Berkas tidak ditemukan di server');
+                }
+
+                // check if uploaded file can't be deleted on server
+                if (!unlink($file)) {
+                    throw new ServerErrorHttpException('Berkas di server tidak dapat dihapus');
+                }
+            }
+
+            // simpan nama file yang asli
+            $this->foto_src = $fotoInstance->name;
+
+            // membuat nama file yang unik menggunakan teks acak (ini file yang akan diakses pada web)
+            $tmp = explode(".", $fotoInstance->name);
+            $ext = end($tmp);
+            $this->foto_web = Yii::$app->security->generateRandomString(16) . ".$ext";
+
+            // the uploaded image instance
+            return $fotoInstance;
+        }
     }
 
     /**

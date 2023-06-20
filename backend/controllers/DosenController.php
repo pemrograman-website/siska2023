@@ -2,17 +2,34 @@
 
 namespace backend\controllers;
 
+use Yii;
 use backend\models\Dosen;
 use backend\models\DosenSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
+use kartik\form\ActiveForm;
+use yii\web\ServerErrorHttpException;
+
+// ini_set("xdebug.var_display_max_children", '-1');
+// ini_set("xdebug.var_display_max_data", '-1');
+// ini_set("xdebug.var_display_max_depth", '-1');
 
 /**
  * DosenController implements the CRUD actions for Dosen model.
  */
 class DosenController extends Controller
 {
+    /**
+     * Definisikan semua parameter di sini.
+     */
+    private static function setParams()
+    {
+        // Parameter 'fotoUrl' untuk mengakses url dari berkas foto
+        Yii::$app->params['fotoUrl'] = Yii::getAlias('@web/foto/');
+    }
+
     /**
      * @inheritDoc
      */
@@ -67,11 +84,32 @@ class DosenController extends Controller
      */
     public function actionCreate()
     {
+        self::setParams();
         $model = new Dosen();
 
+        // Cek validasi Ajax
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            return ActiveForm::validate($model);
+        }
+
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load($this->request->post())) {
+                if ($model->validasiData()) {
+                    // Kontainer untuk foto
+                    $foto = $model->uploadFoto();
+
+                    if ($model->save()) {
+                        if ($foto !== false) {
+                            // Simpan foto
+                            $foto->saveAs($model->getFotoWeb());
+                        }
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        throw new ServerErrorHttpException('Data tidak berhasil disimpan');
+                    }
+                }
             }
         } else {
             $model->loadDefaultValues();
@@ -91,10 +129,34 @@ class DosenController extends Controller
      */
     public function actionUpdate($id)
     {
+        self::setParams();
+
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        // Cek validasi Ajax
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            return ActiveForm::validate($model);
+        }
+
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post())) {
+                if ($model->validasiData()) {
+                    // Kontainer untuk foto
+                    $foto = $model->uploadFoto();
+
+                    if ($model->save()) {
+                        if ($foto !== false) {
+                            // Simpan foto
+                            $foto->saveAs($model->getFotoWeb());
+                        }
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        throw new ServerErrorHttpException('Data tidak berhasil disimpan');
+                    }
+                }
+            }
         }
 
         return $this->render('update', [
