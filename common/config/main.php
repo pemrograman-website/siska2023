@@ -9,6 +9,11 @@ return [
         'cache' => [
             'class' => \yii\caching\FileCache::class,
         ],
+
+        // Komponen jika kita ingin menggunakan RBAC dengan basisdata
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+        ]
     ],
     'language' => 'id-ID',
     'timeZone' => 'Asia/Jakarta',

@@ -29,6 +29,12 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
 
+    // Konstanta untuk role pengguna
+    const ROLE_ADMIN = 'administrator';
+    const ROLE_AKADEMIK = 'akademik';
+    const ROLE_MAHASISWA = 'mahasiswa';
+    const ROLE_DOSEN = 'dosen';
+
 
     /**
      * {@inheritdoc}
