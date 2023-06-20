@@ -20,6 +20,8 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
+
+            // Akses menggunakan ACF (Access Control Filter)
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
