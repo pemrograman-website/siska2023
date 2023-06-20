@@ -53,4 +53,12 @@ class Universitas extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Dosen::class, ['universitas_id' => 'id']);
     }
+
+    /**
+     * Mengembalikan daftar Universitas (id dan nama)
+     */
+    public static function list()
+    {
+        return Universitas::find()->all();
+    }
 }

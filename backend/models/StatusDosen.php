@@ -53,4 +53,12 @@ class StatusDosen extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Dosen::class, ['status_dosen_id' => 'id']);
     }
+
+    /**
+     * Mengembalikan daftar StatusDosen (id dan nama)
+     */
+    public static function list()
+    {
+        return StatusDosen::find()->all();
+    }
 }

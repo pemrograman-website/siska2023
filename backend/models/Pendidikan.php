@@ -53,4 +53,12 @@ class Pendidikan extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Dosen::class, ['pendidikan_id' => 'id']);
     }
+
+    /**
+     * Mengembalikan daftar Pendidikan (id dan nama)
+     */
+    public static function list()
+    {
+        return Pendidikan::find()->all();
+    }
 }

@@ -56,4 +56,9 @@ class Negara extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Mahasiswa::class, ['kewarganegaraan_id' => 'id']);
     }
+
+    public static function list()
+    {
+        return Negara::find()->all();
+    }
 }

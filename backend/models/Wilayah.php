@@ -54,7 +54,7 @@ class Wilayah extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getDosens()
+    public function getDosenByProvinsi()
     {
         return $this->hasMany(Dosen::class, ['prov_id' => 'kode']);
     }
@@ -64,7 +64,7 @@ class Wilayah extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getDosens0()
+    public function getDosenByKabupaten()
     {
         return $this->hasMany(Dosen::class, ['kab_id' => 'kode']);
     }
@@ -74,7 +74,7 @@ class Wilayah extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getDosens1()
+    public function getDosenByKecamatan()
     {
         return $this->hasMany(Dosen::class, ['kec_id' => 'kode']);
     }
@@ -84,7 +84,7 @@ class Wilayah extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getDosens2()
+    public function getDosenByKelurahan()
     {
         return $this->hasMany(Dosen::class, ['kel_id' => 'kode']);
     }
