@@ -86,6 +86,7 @@ class DosenController extends Controller
     {
         self::setParams();
         $model = new Dosen();
+        $model->scenario = 'create';
 
         // Cek validasi Ajax
         if (Yii::$app->request->isAjax) {
@@ -164,6 +165,7 @@ class DosenController extends Controller
         self::setParams();
 
         $model = $this->findModel($id);
+        $model->scenario = 'update';
 
         // Cek validasi Ajax
         if (Yii::$app->request->isAjax) {
@@ -178,7 +180,7 @@ class DosenController extends Controller
                     // Kontainer untuk foto
                     $foto = $model->uploadFoto();
 
-                    if ($model->save()) {
+                    if ($model->save(false)) {
                         if ($foto !== false) {
                             // Simpan foto
                             $foto->saveAs($model->getFotoWeb());

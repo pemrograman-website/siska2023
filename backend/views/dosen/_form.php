@@ -33,6 +33,13 @@ use backend\models\Universitas;
         ]
     ); ?>
 
+    <?php
+    if ($model->scenario == 'update') {
+        echo $form->field($model, 'username')->textInput(['maxlength' => true, 'disabled' => true]);
+
+        echo $form->field($model, 'email')->textInput(['maxlength' => true, 'disabled' => true]);
+    }
+    ?>
 
     <?= $form->field($model, 'nidn')->textInput(['maxlength' => true]) ?>
 
@@ -40,9 +47,14 @@ use backend\models\Universitas;
 
     <?= $form->field($model, 'nama_lengkap')->textInput(['maxlength' => true]) ?>
 
+    <?php
+    if ($model->scenario == 'create') {
         echo $form->field($model, 'username')->textInput(['maxlength' => true]);
 
         echo $form->field($model, 'email')->textInput(['maxlength' => true]);
+    }
+    ?>
+
     <?= $form->field($model, 'jenis_kelamin')->radioList(
         [
             Dosen::LAKI_LAKI => 'Laki-Laki',

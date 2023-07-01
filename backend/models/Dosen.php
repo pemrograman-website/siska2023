@@ -62,13 +62,37 @@ class Dosen extends \yii\db\ActiveRecord
         return 'dosen';
     }
 
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+
+        // Atribut yang diperlukan saat membuat data baru
+        $scenarios['create'] = [
+            'nidn', 'nip', 'nama_lengkap', 'username', 'email',
+            'jenis_kelamin', 'tmp_lahir', 'tgl_lahir',
+            'agama_id', 'alamat', 'prov_id', 'kab_id', 'kec_id',
+            'kel_id', 'pendidikan_id', 'status_id', 'universitas_id',
+            'fakultas_asal', 'prodi_asal', 'homebase_id', 'status_dosen_id'
+        ];
+
+        // Atribut yang diperlukan saat memperbarui data
+        $scenarios['update'] =
+            [
+                'nidn', 'nip', 'nama_lengkap', 'username', 'email',
+                'jenis_kelamin', 'tmp_lahir', 'tgl_lahir',
+                'agama_id', 'alamat', 'prov_id', 'kab_id', 'kec_id',
+                'kel_id', 'pendidikan_id', 'status_id', 'universitas_id',
+                'fakultas_asal', 'prodi_asal', 'homebase_id', 'status_dosen_id'
+            ];
+        return $scenarios;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['tgl_lahir'], 'safe'],
             [
                 [
                     'agama_id', 'homebase_id', 'pendidikan_id', 'status_dosen_id',
@@ -91,7 +115,6 @@ class Dosen extends \yii\db\ActiveRecord
             [['prov_id', 'kab_id', 'kec_id', 'kel_id'], 'string', 'max' => 13],
             [['fakultas_asal', 'foto_src'], 'string', 'max' => 45],
             [['foto_web'], 'string', 'max' => 255],
-            [['nidn_nip'], 'unique'],
             [
                 ['agama_id'], 'exist', 'skipOnError' => true,
                 'targetClass' => Agama::class,
@@ -112,7 +135,22 @@ class Dosen extends \yii\db\ActiveRecord
             [['kel_id'], 'exist', 'skipOnError' => true, 'targetClass' => Wilayah::class, 'targetAttribute' => ['kel_id' => 'kode']],
 
             // Berikan nilai default null untuk atribut yang menjadi foreign key
-            [['prov_id', 'kab_id', 'kec_id', 'kel_id', 'user_id'], 'default', 'value' => null]
+            [['prov_id', 'kab_id', 'kec_id', 'kel_id', 'user_id'], 'default', 'value' => null],
+
+            // Rule untuk username dan email berdasarkan skenario
+            [['username', 'email'], 'required', 'on' => 'create'],
+            [
+                ['username'], 'unique', 'targetClass' => \common\models\User::class,
+                'targetAttribute' => ['username' => 'username'],
+                'message' => 'Username sdh ada yang pakai. Silahkan diganti yang lain',
+                'on' => 'create'
+            ],
+            [
+                ['email'], 'unique', 'targetClass' => \common\models\User::class,
+                'targetAttribute' => ['email' => 'email'],
+                'message' => 'Email sdh ada yang pakai. Silahkan diganti yang lain',
+                'on' => 'create'
+            ],
         ];
     }
 
