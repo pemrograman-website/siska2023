@@ -33,10 +33,16 @@ use backend\models\Universitas;
         ]
     ); ?>
 
-    <?= $form->field($model, 'nidn_nip')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'nidn')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'nip')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'nama_lengkap')->textInput(['maxlength' => true]) ?>
 
+        echo $form->field($model, 'username')->textInput(['maxlength' => true]);
+
+        echo $form->field($model, 'email')->textInput(['maxlength' => true]);
     <?= $form->field($model, 'jenis_kelamin')->radioList(
         [
             Dosen::LAKI_LAKI => 'Laki-Laki',
@@ -193,7 +199,7 @@ use backend\models\Universitas;
     <?= $form->field($model, 'status_dosen_id')
         ->widget(Select2::class, [
             'data' => ArrayHelper::map(StatusDosen::list(), 'id', 'keterangan'), // array yang diambil dari tabel Fakultas
-            'options' => ['placeholder' => 'Pilih Pendidikan'],
+            'options' => ['placeholder' => 'Pilih Status Dosen'],
             'hideSearch' => false,
             'pluginOptions' => [
                 'allowClear' => true,
@@ -203,7 +209,7 @@ use backend\models\Universitas;
     <?= $form->field($model, 'universitas_id')
         ->widget(Select2::class, [
             'data' => ArrayHelper::map(Universitas::list(), 'id', 'nama'), // array yang diambil dari tabel Fakultas
-            'options' => ['placeholder' => 'Pilih Pendidikan'],
+            'options' => ['placeholder' => 'Pilih Universitas S2 Asal'],
             'hideSearch' => false,
             'pluginOptions' => [
                 'allowClear' => true,

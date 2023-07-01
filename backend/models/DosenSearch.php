@@ -18,7 +18,7 @@ class DosenSearch extends Dosen
     {
         return [
             [['id', 'agama_id', 'homebase_id', 'pendidikan_id', 'status_dosen_id', 'universitas_id', 'user_id'], 'integer'],
-            [['nidn_nip', 'nama_lengkap', 'jenis_kelamin', 'tmp_lahir', 'tgl_lahir', 'no_hp', 'alamat', 'prov_id', 'kab_id', 'kec_id', 'kel_id', 'fakultas_asal', 'prodi_asal', 'foto_src', 'foto_web'], 'safe'],
+            [['nidn', 'nip', 'nama_lengkap', 'jenis_kelamin', 'tmp_lahir', 'tgl_lahir', 'no_hp', 'alamat', 'prov_id', 'kab_id', 'kec_id', 'kel_id', 'fakultas_asal', 'prodi_asal', 'foto_src', 'foto_web'], 'safe'],
         ];
     }
 
@@ -68,7 +68,8 @@ class DosenSearch extends Dosen
             'user_id' => $this->user_id,
         ]);
 
-        $query->andFilterWhere(['like', 'nidn_nip', $this->nidn_nip])
+        $query->andFilterWhere(['like', 'nidn', $this->nidn])
+            ->andFilterWhere(['like', 'nip', $this->nip])
             ->andFilterWhere(['like', 'nama_lengkap', $this->nama_lengkap])
             ->andFilterWhere(['like', 'jenis_kelamin', $this->jenis_kelamin])
             ->andFilterWhere(['like', 'tmp_lahir', $this->tmp_lahir])

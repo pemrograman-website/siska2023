@@ -11,7 +11,8 @@ use yii\web\ServerErrorHttpException;
  * This is the model class for table "dosen".
  *
  * @property int $id
- * @property string|null $nidn_nip
+ * @property string|null $nidn
+ * @property string|null $nip
  * @property string|null $nama_lengkap
  * @property string|null $jenis_kelamin
  * @property string|null $tmp_lahir
@@ -71,7 +72,7 @@ class Dosen extends \yii\db\ActiveRecord
             [
                 [
                     'agama_id', 'homebase_id', 'pendidikan_id', 'status_dosen_id',
-                    'universitas_id', 'nama_lengkap', /*'user_id'*/
+                    'universitas_id', 'nama_lengkap', 'tgl_lahir',
                 ], 'required'
             ],
             [
@@ -80,7 +81,8 @@ class Dosen extends \yii\db\ActiveRecord
                     'universitas_id', 'user_id'
                 ], 'integer'
             ],
-            [['nidn_nip'], 'string', 'max' => 10],
+            [['nidn', 'nip'], 'string', 'max' => 10],
+            [['nidn', 'nip'], 'unique'],
             [['nama_lengkap', 'prodi_asal'], 'string', 'max' => 50],
             [['jenis_kelamin'], 'string', 'max' => 1],
             [['tmp_lahir'], 'string', 'max' => 30],
@@ -121,7 +123,8 @@ class Dosen extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'nidn_nip' => 'NIDN / NIP',
+            'nidn' => 'NIDN',
+            'nip' => 'NIP',
             'nama_lengkap' => 'Nama Lengkap',
             'jenis_kelamin' => 'Jenis Kelamin',
             'tmp_lahir' => 'Tempat Lahir',

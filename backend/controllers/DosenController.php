@@ -97,17 +97,49 @@ class DosenController extends Controller
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
                 if ($model->validasiData()) {
-                    // Kontainer untuk foto
-                    $foto = $model->uploadFoto();
+                    $transaction = Yii::$app->db->beginTransaction(\yii\db\Transaction::SERIALIZABLE);
 
-                    if ($model->save()) {
-                        if ($foto !== false) {
-                            // Simpan foto
-                            $foto->saveAs($model->getFotoWeb());
+                    try {
+                        // Membuat User baru dan simpan
+                        $user = new \common\models\User();
+                        $user->username = $model->username;
+                        $user->email = $model->email;
+                        $user->setPassword(str_replace("-", "", $model->tgl_lahir)); // untuk awalan, gunakan tanggal 1-1-1988
+                        $user->status = \common\models\User::STATUS_ACTIVE;
+
+                        if ($user->save(false)) {
+                            // Membuat penugasan User baru tersebut dengan role 'dosen'
+                            $auth = new \yii\rbac\DbManager;
+                            $auth->init();
+                            $getrole = $auth->getRole('dosen');
+                            $auth->assign($getrole, $user->id);
+
+                            // Update user_id pada Dosen dengan id pada User
+                            $model->user_id = $user->id;
+                        } else {
+                            throw new ServerErrorHttpException('Data User tidak bisa disimpan');
                         }
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    } else {
-                        throw new ServerErrorHttpException('Data tidak berhasil disimpan');
+
+                        // Kontainer untuk foto
+                        $foto = $model->uploadFoto();
+
+                        // Menyimpan Dosen tanpa validasi, karena validasi sudah dilakukan di atas
+                        if ($model->save(false)) {
+                            if ($foto !== false) {
+                                // Simpan foto
+                                $foto->saveAs($model->getFotoWeb());
+                            }
+
+                            $transaction->commit();
+                            return $this->redirect(['view', 'id' => $model->id]);
+                        } else {
+                            // var_dump($model->errors);
+                            // die();
+                            throw new ServerErrorHttpException('Data tidak berhasil disimpan');
+                        }
+                    } catch (\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
                     }
                 }
             }

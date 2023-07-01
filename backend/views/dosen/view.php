@@ -6,14 +6,12 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var backend\models\Dosen $model */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Dosens', 'url' => ['index']];
+$this->title = $model->nama_lengkap;
+$this->params['breadcrumbs'][] = ['label' => 'Dosen', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="dosen-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -30,7 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'nidn_nip',
+            'nidn',
+            'nip',
             'nama_lengkap',
             'jenis_kelamin',
             'tmp_lahir',
