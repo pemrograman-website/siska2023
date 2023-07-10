@@ -13,6 +13,11 @@ return [
         'url' => Url::toRoute(['/dosen/view', 'id' => Yii::$app->user->identity->profil->id])
     ],
     [
+        'label' => 'Ubah Password',
+        'icon' => 'key',
+        'url' => ['/user/ubah-password'],
+    ],
+    [
         'label' => 'Perkuliahan',
         'icon' => 'database',
         'items' => [
