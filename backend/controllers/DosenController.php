@@ -12,6 +12,8 @@ use yii\web\Response;
 use kartik\form\ActiveForm;
 use yii\web\ServerErrorHttpException;
 
+use yii\filters\AccessControl;
+
 // ini_set("xdebug.var_display_max_children", '-1');
 // ini_set("xdebug.var_display_max_data", '-1');
 // ini_set("xdebug.var_display_max_depth", '-1');
@@ -42,6 +44,24 @@ class DosenController extends Controller
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                    ],
+                ],
+                // Mengaktifkan RBAC Rule untuk controller ini
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'roles' => ['ubah_data'],
+                            'roleParams' => function () {
+                                $model = Dosen::findOne(['id' => Yii::$app->request->get('id')]);
+                                if (!is_null($model))
+                                    // Kirimkan USER ID pemilik data ke PemilikDataRule
+                                    return ['data' => $model->user_id];
+
+                                return ['data' => null];
+                            }
+                        ],
                     ],
                 ],
             ]

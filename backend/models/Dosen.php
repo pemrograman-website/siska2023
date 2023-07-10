@@ -57,6 +57,7 @@ class Dosen extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+
     public static function tableName()
     {
         return 'dosen';
@@ -69,7 +70,7 @@ class Dosen extends \yii\db\ActiveRecord
         // Atribut yang diperlukan saat membuat data baru
         $scenarios['create'] = [
             'nidn', 'nip', 'nama_lengkap', 'username', 'email',
-            'jenis_kelamin', 'tmp_lahir', 'tgl_lahir',
+            'jenis_kelamin', 'tmp_lahir', 'tgl_lahir', 'no_hp',
             'agama_id', 'alamat', 'prov_id', 'kab_id', 'kec_id',
             'kel_id', 'pendidikan_id', 'status_id', 'universitas_id',
             'fakultas_asal', 'prodi_asal', 'homebase_id', 'status_dosen_id'
@@ -79,7 +80,7 @@ class Dosen extends \yii\db\ActiveRecord
         $scenarios['update'] =
             [
                 'nidn', 'nip', 'nama_lengkap', 'username', 'email',
-                'jenis_kelamin', 'tmp_lahir', 'tgl_lahir',
+                'jenis_kelamin', 'tmp_lahir', 'tgl_lahir', 'no_hp',
                 'agama_id', 'alamat', 'prov_id', 'kab_id', 'kec_id',
                 'kel_id', 'pendidikan_id', 'status_id', 'universitas_id',
                 'fakultas_asal', 'prodi_asal', 'homebase_id', 'status_dosen_id'
@@ -107,6 +108,9 @@ class Dosen extends \yii\db\ActiveRecord
             ],
             [['nidn', 'nip'], 'string', 'max' => 10],
             [['nidn', 'nip'], 'unique'],
+            // Untuk semua atribut berbentuk TEXTBOX dengan constraint UNIQUE, buat isi atribut menjadi NULL jika tidak diisi oleh user
+            [['nidn', 'nip'], 'default', 'value' => null],
+
             [['nama_lengkap', 'prodi_asal'], 'string', 'max' => 50],
             [['jenis_kelamin'], 'string', 'max' => 1],
             [['tmp_lahir'], 'string', 'max' => 30],
@@ -197,6 +201,7 @@ class Dosen extends \yii\db\ActiveRecord
                 $this->tgl_lahir = strtotime($this->tgl_lahir);
                 $this->tgl_lahir = date('Y-m-d', $this->tgl_lahir);
             }
+
             return true;
         }
 

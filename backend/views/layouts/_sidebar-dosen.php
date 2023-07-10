@@ -7,7 +7,11 @@ return [
         'label' => 'DOSEN',
         'header' => true,
     ],
-    ['label' => 'Profil',  'icon' => 'user-tie', 'url' => Url::toRoute(['/dosen/view', 'id' => '1'])],
+    [
+        'label' => 'Profil',
+        'icon' => 'user-tie',
+        'url' => Url::toRoute(['/dosen/view', 'id' => Yii::$app->user->identity->profil->id])
+    ],
     [
         'label' => 'Perkuliahan',
         'icon' => 'database',
